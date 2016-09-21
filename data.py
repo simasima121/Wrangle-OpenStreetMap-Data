@@ -42,13 +42,18 @@ import re
 import codecs
 import json
 
-## 
+
+## Update the street and city names using update street name proedure in mapping.py
+## before saving them to JSON. 
+from mapping import audit, update_name, mapping
 
 lower = re.compile(r'^([a-z]|_)*$')
 lower_colon = re.compile(r'^([a-z]|_)*:([a-z]|_)*$')
 problemchars = re.compile(r'[=\+/&<>;\'"\?%#$@\,\. \t\r\n]')
 
 CREATED = [ "version", "changeset", "timestamp", "user", "uid"]
+
+
 
 def shape_element(element):
     node = {'created':{}, 'address':{}}
@@ -114,7 +119,7 @@ def shape_element(element):
     else:
         return None
 
-
+## This file writes out a JSON file to be put imported into a mongo database.
 def process_map(file_in, pretty = False):
     # You do not need to change this file
     file_out = "{0}.json".format(file_in)
@@ -123,6 +128,12 @@ def process_map(file_in, pretty = False):
         for _, element in ET.iterparse(file_in):
             el = shape_element(element)
             if el:
+                ## Updating street names to have correct mapping
+                for e in el['address']:
+                    if e == 'street':
+                        updated = update_name(el['address'][e], mapping)
+                        el['address'][e] = updated
+                        print el['address'][e]
                 data.append(el)
                 if pretty:
                     fo.write(json.dumps(el, indent=2)+"\n")
@@ -135,7 +146,7 @@ def test():
     # call the process_map procedure with pretty=False. The pretty=True option adds 
     # additional spaces to the output, making it significantly larger.
     data = process_map('london_sample_1000.osm', False)
-    pprint.pprint(data)
+    #pprint.pprint(data)
 
 if __name__ == "__main__":
     test()
