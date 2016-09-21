@@ -84,6 +84,7 @@ def shape_element(element):
                 node['created'][ele] = element.attrib[ele]
             else:
                 node[ele] = element.attrib[ele]
+        
         noderefs = []
         for child in element:
             
@@ -94,7 +95,6 @@ def shape_element(element):
                 # if the second level tag "k" value contains problematic characters, it should be ignored
                 if problemchars.search(child.attrib['k']):
                     continue
-                
                 #if the second level tag "k" value starts with "addr:", it should be added to a dictionary "address"
                 if lower_colon.search(child.attrib['k']):
                     colon = child.attrib['k'].find(':')
@@ -107,7 +107,13 @@ def shape_element(element):
                         vval = child.attrib['v']
 
                         node['address'][kval] = vval
-
+                
+                ## Ensuring postcodes are added into the node dictionary
+                elif child.attrib['k'] == 'postal_code':
+                    kval = "postcode"
+                    vval = child.attrib['v']
+                    node['address'][kval] = vval
+                    
                 else:
                     kval = child.attrib['k']
                     vval = child.attrib['v']
@@ -128,12 +134,13 @@ def process_map(file_in, pretty = False):
         for _, element in ET.iterparse(file_in):
             el = shape_element(element)
             if el:
-                ## Updating street names to have correct mapping
+                ## Updating street names and city name to have correct mapping
                 for e in el['address']:
                     if e == 'street':
                         updated = update_name(el['address'][e], mapping)
                         el['address'][e] = updated
-                        print el['address'][e]
+                    if e == 'city':
+                        el['address'][e] = 'London'
                 data.append(el)
                 if pretty:
                     fo.write(json.dumps(el, indent=2)+"\n")

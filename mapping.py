@@ -35,7 +35,6 @@ mapping = { "St": "Street",
             "Rd": "Road",
             "Rd.": "Road"}
 
-
 def audit_street_type(street_types, street_name):
     # matches the last word in a street name (as they end with the street type i.e. avenue)
     m = street_type_re.search(street_name)
@@ -51,12 +50,12 @@ def is_street_name(elem):
 
 def is_city_name(elem):
     # looks at k attribute of element that was passed in
-    # with k attribue having "addr:street" value i.e. a street name
+    # with k attribue having "addr:city" value i.e. a city name
     return (elem.attrib['k'] == "addr:city")
 
 def is_postcode_name(elem):
     # looks at k attribute of element that was passed in
-    # with k attribue having "addr:street" value i.e. a street name
+    # with k attribue having "addr:postcode" value i.e. a postcode name
     return (elem.attrib['k'] == "addr:postcode")
 
 
@@ -67,6 +66,7 @@ def audit(osmfile):
     city_types = set()
     tag_types = set()
     attrib_types = defaultdict(set)
+
 
     # looping through XML file using SAX style parsing part of c element tree module.
     # this allows you to rearrange or remove parts of the tree whilst parsing and takes less resources.
@@ -79,6 +79,7 @@ def audit(osmfile):
                 
                 if 'naptan' not in tag.attrib['k']:
                     attrib_types[tag.attrib['k']] = tag.attrib['v']
+                    #print tag.attrib['k']
                 
                 if is_street_name(tag): # if I have a tag that is specified in the way we want in is_street_name
                     audit_street_type(street_types, tag.attrib['v'])
@@ -86,16 +87,19 @@ def audit(osmfile):
                 if is_city_name(tag): # if I have a tag that is specified in the way we want in is_city_name
                     city_types.add(tag.attrib['v'])
 
-                if is_postcode_name(tag): # if I have a tag that is specified in the way we want in is_city_name
+                if is_postcode_name(tag): # if I have a tag that is specified in the way we want in is_postcode_name
                     postcode_types.add(tag.attrib['v'])
     
-
+    ## checking postcode, city and tag types.
     print "=======postcode_types========"
     print postcode_types
     print "=======city_types========"
     print city_types
     print "=======tag_types======= "
     print tag_types
+    print "=======attrib_types======= "
+    #for x in attrib_types:
+        #print x
 
     osm_file.close()
     return street_types
