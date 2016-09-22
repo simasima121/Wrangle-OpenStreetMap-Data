@@ -29,6 +29,7 @@ I downloaded the data in XML, processed it into JSON and imported it into a Mong
 ##Miscellaneous
 * [Importing json into MongoDB][4]
 * [Performing queries on MongoDB database][5]
+
 ###Example Queries in terminal for mongodb
 1. Enter mongo shell using **mongo** command in terminal
 * Set Database: **use osm**
