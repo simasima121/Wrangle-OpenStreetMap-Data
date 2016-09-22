@@ -107,7 +107,7 @@ def audit(osmfile):
 
 def update_name(name, mapping):
     name = name.split()
-    print name
+    #print name
     for entry in mapping:
         for i in range(0, len(name)):
             if entry == name[i]:
