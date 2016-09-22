@@ -46,6 +46,7 @@ def num_of_shops():
 def most_active_users():
 	"""
 	Returns 5 most active users
+	From Sample Project
 
 	In mongo shell type db.ldn.aggregate({"$group":{ "_id":"$created.user", "count":{"$sum":1}}}, {"$sort":{"count":-1}}, {"$limit":5})
 	"""
@@ -54,6 +55,22 @@ def most_active_users():
 				{"$limit":5}]
 
 	return [doc for doc in db.ldn.aggregate(pipeline)]
+
+def users_appearing_once():
+	"""
+	Returns users who have only posted once
+
+	In mongo shell type db.ldn.aggregate({"$group":{ "_id":"$created.user", "count":{"$sum":1}}},
+				{"$match":{"count":{"$eq":1}}}).count()
+	"""
+	pipeline = [{"$group":{ "_id":"$created.user", "count":{"$sum":1}}},
+				{"$match":{"count":{"$eq":1}}}]
+
+	count = 0
+	for doc in db.ldn.aggregate(pipeline):
+		count += 1
+	return count
+	#return [doc for doc in db.ldn.aggregate(pipeline)]
 
 if __name__ == "__main__":
     db = get_db('osm')
@@ -72,5 +89,8 @@ if __name__ == "__main__":
 
     print "5 Most Active Users: "
     pprint.pprint(most_active_users())
+
+    print "Users who only posted once: "
+    pprint.pprint(users_appearing_once())
 
 
