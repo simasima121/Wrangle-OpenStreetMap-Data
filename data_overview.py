@@ -13,15 +13,24 @@ def num_of_unique_users():
 	# Call in mongoshell is col.distinct("created.user").length
 	return len(db.ldn.distinct("created.user"))
 
-def num_of(types, s):
+def num_of_nodes_ways(s):
 	"""
-	Function used to work out number of things in first level of dictionary.
+	Returns number of nodes or ways
 	"""
-	return db.ldn.find({types:s}).count()
+	return db.ldn.find({"type":s}).count()
 
-def most_active_users(db):
+def num_of_amenity(s):
 	"""
-	Function used to work out top 5 most active users
+	Returns number of amenity in nodes
+	"""
+	count = 0
+	for ele in db.ldn.find({"type":"node","amenity":s}):
+		count += 1
+	return count
+
+def most_active_users():
+	"""
+	Returns 5 most active users
 	"""
 	pipeline = [{"$group":{ "_id":"$created.user", "count":{"$sum":1}}},
 				{"$sort":{"count":-1}},
@@ -33,11 +42,15 @@ if __name__ == "__main__":
     db = get_db('osm')
     import pprint
 
-    print "Number of documents: ",num_of_docs()
-    print "Number of unique users: ",num_of_unique_users()
+    print "Number of documents: ", num_of_docs()
+    print "Number of unique users: ", num_of_unique_users()
 
-    print "Number of nodes: ",num_of("type","node")
-    print "Number of ways: ",num_of("type","way")
+    print "Number of nodes: ", num_of_nodes_ways("node")
+    print "Number of ways: ", num_of_nodes_ways("way")
+
+    print "Number of cafes: ", num_of_amenity("cafe")
+    print "Number of pubs: ", num_of_amenity("pub")
+    print "Number of schools: ", num_of_amenity("school")
 
     print "5 Most Active Users: "
-    pprint.pprint(most_active_users(db))
+    pprint.pprint(most_active_users())
