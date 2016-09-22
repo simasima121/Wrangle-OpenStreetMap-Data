@@ -76,13 +76,18 @@ def users_appearing_once():
 	#return count
 	return [doc for doc in db.ldn.aggregate(pipeline)]
 
-def without_an_address():
+def most_common_amenity():
 	"""
 	Returns amount of nodes without an address
 
-	In mongo shell type db.ldn.find({"type":"node","shop":{"$exists":1}}).count()
+	In mongo shell type db.ldn.aggregate(
+  		{"$match":{"amenity":{"$exists":1}}},
+  		{"$group":{"_id":"$amenity", "count":{"$sum":1}}},
+  		{"$sort":{"count":-1}}, {"$limit":1})
 	"""
-	pipeline = [{"$match":{"address":{"$exists":0}}}]
+	pipeline = [{"$match":{"amenity":{"$exists":1}}},
+  		{"$group":{"_id":"$amenity", "count":{"$sum":1}}},
+  		{"$sort":{"count":-1}}, {"$limit":1}]
 
 	return [doc for doc in db.ldn.aggregate(pipeline)]
 
@@ -107,7 +112,7 @@ if __name__ == "__main__":
     print "Users who only posted once: "
     pprint.pprint(users_appearing_once())
 
-    print "Entries without an address: "
-    pprint.pprint(without_an_address())
+    print "Most Common Amenity: "
+    pprint.pprint(most_common_amenity())
 
 
