@@ -56,7 +56,10 @@ def is_city_name(elem):
 def is_postcode_name(elem):
     # looks at k attribute of element that was passed in
     # with k attribue having "addr:postcode" value i.e. a postcode name
-    return (elem.attrib['k'] == "addr:postcode")
+    if elem.attrib['k'] == "addr:postcode":
+        return (elem.attrib['k'] == "addr:postcode")
+    if elem.attrib['k'] == "postal_code":
+        return (elem.attrib['k'] == "postal_code")
 
 
 def audit(osmfile):
