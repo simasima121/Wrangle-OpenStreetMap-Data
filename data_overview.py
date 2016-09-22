@@ -13,7 +13,16 @@ def num_of_unique_users():
 	# Call in mongoshell is col.distinct("created.user").length
 	return len(db.ldn.distinct("created.user"))
 
+def num_of(types, s):
+	"""
+	Function used to work out number of things in first level of dictionary.
+	"""
+	return db.ldn.find({types:s}).count()
+
 def most_active_users(db):
+	"""
+	Function used to work out top 5 most active users
+	"""
 	pipeline = [{"$group":{ "_id":"$created.user", "count":{"$sum":1}}},
 				{"$sort":{"count":-1}},
 				{"$limit":5}]
@@ -26,6 +35,9 @@ if __name__ == "__main__":
 
     print "Number of documents: ",num_of_docs()
     print "Number of unique users: ",num_of_unique_users()
+
+    print "Number of nodes: ",num_of("type","node")
+    print "Number of ways: ",num_of("type","way")
 
     print "5 Most Active Users: "
     pprint.pprint(most_active_users(db))
