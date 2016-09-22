@@ -17,7 +17,7 @@ I downloaded the data in XML, processed it into JSON and imported it into a Mong
 3. Using terminal, navigate to the project root directory.
 4. In the terminal, type **python data.py** to create .json file (may have to audit data to see if parsed data is correct).
 5. In terminal, type **mongod** to launch mongodb.
-6. Import json document into mongo using following command: **mongoimport -d <databaseName> -c <collectionName> --file <filename>.json**
+6. Import json document into mongo using following command: **mongoimport -d databaseName -c collectionName --file filename.json**
 7. Run **data_overview.py** to do queries on data in mongodb database.
 8. To log out of mongodb database, enter ctrl-c twice in terminal.
 
@@ -27,11 +27,14 @@ I downloaded the data in XML, processed it into JSON and imported it into a Mong
 [3]: http://api.mongodb.com/python/current/installation.html
 
 ##Miscellaneous
-[Importing json into MongoDB][https://discussions.udacity.com/t/import-json-into-mongodb-project3/158051/4]
-[Performing queries on MongoDB database][https://discussions.udacity.com/t/uploading-json-file-and-performing-query-in-mongodb/42777/4]
+* [Importing json into MongoDB][4]
+* [Performing queries on MongoDB database][5]
 ###Example Queries in terminal for mongodb
 1. Enter mongo shell using **mongo** command in terminal
 * Set Database: **use osm**
 * col = db.ldn
 * Number of documents in db: **col.find().count()**
 * Most active user: **col.aggregate([{"$group":{ "_id":"$created.user", "count":{"$sum":1}}},{"$sort":{"count":-1}},{"$limit":10}]).pretty()**
+
+[4]: https://discussions.udacity.com/t/import-json-into-mongodb-project3/158051/4
+[5]: https://discussions.udacity.com/t/uploading-json-file-and-performing-query-in-mongodb/42777/4
