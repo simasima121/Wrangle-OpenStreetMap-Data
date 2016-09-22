@@ -58,19 +58,33 @@ def most_active_users():
 
 def users_appearing_once():
 	"""
-	Returns users who have only posted once
+	Returns number of users who have only posted once
 
-	In mongo shell type db.ldn.aggregate({"$group":{ "_id":"$created.user", "count":{"$sum":1}}},
-				{"$match":{"count":{"$eq":1}}}).count()
+	In mongo shell type db.ldn.aggregate({"$group":{ "_id":"$created.user", "count":{"$sum":1}}},{"$match":{"count":{"$eq":1}}}).count()
 	"""
 	pipeline = [{"$group":{ "_id":"$created.user", "count":{"$sum":1}}},
-				{"$match":{"count":{"$eq":1}}}]
+				{"$group":{"_id":"$count", "num_users":{"$sum":1}}},
+				{"$sort":{"_id":1}},
+				{"$limit":1}]
 
-	count = 0
-	for doc in db.ldn.aggregate(pipeline):
-		count += 1
-	return count
-	#return [doc for doc in db.ldn.aggregate(pipeline)]
+	#pipeline = [{"$group":{ "_id":"$created.user", "count":{"$sum":1}}},
+	#			{"$match":{"count":{"$eq":1}}}]
+
+	#count = 0
+	#for doc in db.ldn.aggregate(pipeline):
+	#	count += 1
+	#return count
+	return [doc for doc in db.ldn.aggregate(pipeline)]
+
+def without_an_address():
+	"""
+	Returns amount of nodes without an address
+
+	In mongo shell type db.ldn.find({"type":"node","shop":{"$exists":1}}).count()
+	"""
+	pipeline = [{"$match":{"address":{"$exists":0}}}]
+
+	return [doc for doc in db.ldn.aggregate(pipeline)]
 
 if __name__ == "__main__":
     db = get_db('osm')
@@ -92,5 +106,8 @@ if __name__ == "__main__":
 
     print "Users who only posted once: "
     pprint.pprint(users_appearing_once())
+
+    print "Entries without an address: "
+    pprint.pprint(without_an_address())
 
 
