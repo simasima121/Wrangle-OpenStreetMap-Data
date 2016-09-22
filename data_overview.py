@@ -9,6 +9,18 @@ def get_db(db_name):
 def num_of_docs():
 	return db.ldn.find().count() ## db.collectionname
 
+def most_active_users(db):
+	pipeline = [{"$group":{ "_id":"$created.user", "count":{"$sum":1}}},
+				{"$sort":{"count":-1}},
+				{"$limit":5}]
+
+	return [doc for doc in db.ldn.aggregate(pipeline)]
+
 if __name__ == "__main__":
     db = get_db('osm')
-    print num_of_docs()
+    import pprint
+
+    print "Number of documents: ",num_of_docs()
+
+    print "5 Most Active Users: "
+    pprint.pprint(most_active_users(db))
