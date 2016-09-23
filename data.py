@@ -45,13 +45,16 @@ import json
 
 ## Update the street and city names using update street name proedure in mapping.py
 ## before saving them to JSON. 
-from mapping import audit, update_name, mapping
+from mapping import update_name, mapping
 
 lower = re.compile(r'^([a-z]|_)*$')
 lower_colon = re.compile(r'^([a-z]|_)*:([a-z]|_)*$')
 problemchars = re.compile(r'[=\+/&<>;\'"\?%#$@\,\. \t\r\n]')
 
 CREATED = [ "version", "changeset", "timestamp", "user", "uid"]
+
+banned = ['0','1','2','3','4','5','6','7','8','9']
+
 
 def shape_element(element):
     node = {'created':{}, 'address':{}}
@@ -95,8 +98,8 @@ def shape_element(element):
                     continue
                 #if the second level tag "k" value starts with "addr:", it should be added to a dictionary "address"
                 if lower_colon.search(child.attrib['k']):
-                    colon = child.attrib['k'].find(':')
-                    
+                    colon = child.attrib['k'].find(':')                       
+
                     # if the second level tag "k" value starts with "addr:", 
                     # it should be added to a dictionary "address"
                     if child.attrib['k'][:colon] == 'addr':
@@ -104,7 +107,21 @@ def shape_element(element):
                         kval = child.attrib['k'][colon+1:]
                         vval = child.attrib['v']
 
-                        node['address'][kval] = vval
+                        # Ensuring incorrect postcode in streetfield are moved to postcode
+                        if child.attrib['k'][colon+1:] == 'street':
+                            tested = vval.split(" ")
+                            if len(tested) > 1:
+                                end_val = tested[0][-1] # postcode end with number and start with number
+                                first_val = tested[1][0]
+                                if end_val in banned and first_val in banned:
+                                    node['address']['postcode'] = vval
+                                else:
+                                    node['address'][kval] = vval
+                            else:
+                                node['address'][kval] = vval
+                        else:
+                            node['address'][kval] = vval
+                        
 
                     if child.attrib['k'][:colon] == 'contact':
                         
@@ -144,6 +161,7 @@ def process_map(file_in, pretty = False):
                     if e == 'street':
                         updated = update_name(el['address'][e], mapping)
                         el['address'][e] = updated
+
                     if e == 'city':
                         el['address'][e] = 'London'
                 data.append(el)
@@ -157,7 +175,7 @@ def test():
     # NOTE: if you are running this code on your computer, with a larger dataset, 
     # call the process_map procedure with pretty=False. The pretty=True option adds 
     # additional spaces to the output, making it significantly larger.
-    data = process_map('london_sample_1000.osm', False)
+    data = process_map('london_sample_100.osm', False)
     print "done"
     #pprint.pprint(data)
 

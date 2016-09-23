@@ -17,7 +17,7 @@ import re
 import pprint
 
 
-OSMFILE = "london_sample_1000.osm"
+OSMFILE = "london_sample_100.osm"
 
 # match sequence of non-white space characters optionally 
 # followed by a period and match must occur at end of the string.
@@ -25,14 +25,26 @@ street_type_re = re.compile(r'\b\S+\.?$', re.IGNORECASE)
 
 expected = ["Street", "Avenue", "Boulevard", "Drive", "Court", "Place", "Square", "Lane", "Road", 
             "Trail", "Parkway", "Commons", "Way", "Walk", "Gardens", "Close", "Acre", "Colonnade",
-            "Hill", "Mead", "Rise", "Terrace", "Village"]
+            "Hill", "Mead", "Rise", "Terrace", "Village", "Square","North"]
 
 # UPDATE THIS VARIABLE
 mapping = { "St": "Street",
             "St.": "Street",
+            "st": "Street",
+            "street": "Street",
+            "STREET":"Street",
+            "Sq": "Square",
+            "boulevard": "Boulevard",
+            "HILL":"Hill",
+            "place": "Place",
             "Ave": "Avenue",
-            "Ave": "Avenue",
+            "Ave.": "Avenue",
+            "Ln": "Lane",
+            "N": "North",
             "Rd": "Road",
+            "road": "Road",
+            "Road)": "Road",
+            "ROAD": "Road",
             "Rd.": "Road"}
 
 def audit_street_type(street_types, street_name):
@@ -100,7 +112,7 @@ def audit(osmfile):
     print city_types
     print "=======tag_types======= "
     print tag_types
-    print "=======attrib_types======= "
+    #print "=======attrib_types======= "
     #for x in attrib_types:
         #print x
 

@@ -59,6 +59,7 @@ def most_active_users():
 def users_appearing_once():
 	"""
 	Returns number of users who have only posted once
+	From Sample Project
 
 	In mongo shell type db.ldn.aggregate({"$group":{ "_id":"$created.user", "count":{"$sum":1}}},{"$match":{"count":{"$eq":1}}}).count()
 	"""
