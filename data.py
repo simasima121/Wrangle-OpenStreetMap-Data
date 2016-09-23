@@ -111,16 +111,37 @@ def shape_element(element):
                         if child.attrib['k'][colon+1:] == 'street':
                             tested = vval.split(" ")
                             if len(tested) > 1:
-                                end_val = tested[0][-1] # postcode end with number and start with number
-                                first_val = tested[1][0]
-                                if end_val in banned and first_val in banned:
-                                    node['address']['postcode'] = vval
-                                else:
-                                    node['address'][kval] = vval
+                                try:
+                                    end_val = tested[0][-1] # postcode end with number and start with number
+                                    first_val = tested[1][0]
+                                    if end_val in banned and first_val in banned:
+                                        node['address']['postcode'] = vval
+                                    else:
+                                        node['address'][kval] = vval
+                                except:
+                                    ## if theres an empty item in the array, remove it
+                                    tested = filter(None, tested)
+                                    if len(tested) > 1:
+                                        end_val = tested[0][-1] # postcode end with number and start with number
+                                        first_val = tested[1][0]
+                                        if end_val in banned and first_val in banned:
+                                            node['address']['postcode'] = vval
+                                        else:
+                                            
+                                            try:
+                                                node['address'][kval] = vval
+                                            except:
+                                                print "line 131"
+                                                print child.attrib 
+
                             else:
                                 node['address'][kval] = vval
                         else:
-                            node['address'][kval] = vval
+                            try:
+                                node['address'][kval] = vval
+                            except:
+                                print "line 139"
+                                print child.attrib
                         
 
                     if child.attrib['k'][:colon] == 'contact':
@@ -134,7 +155,11 @@ def shape_element(element):
                 elif child.attrib['k'] == 'postal_code':
                     kval = "postcode"
                     vval = child.attrib['v']
-                    node['address'][kval] = vval
+                    try:
+                        node['address'][kval] = vval
+                    except:
+                        print "line 158"
+                        print child.attrib                    
                 
                 else:
                     kval = child.attrib['k']
@@ -175,7 +200,7 @@ def test():
     # NOTE: if you are running this code on your computer, with a larger dataset, 
     # call the process_map procedure with pretty=False. The pretty=True option adds 
     # additional spaces to the output, making it significantly larger.
-    data = process_map('london_sample_100.osm', False)
+    data = process_map('london_england.osm', False)
     print "done"
     #pprint.pprint(data)
 
