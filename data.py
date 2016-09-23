@@ -127,7 +127,6 @@ def shape_element(element):
                                         if end_val in banned and first_val in banned:
                                             node['address']['postcode'] = vval
                                         else:
-                                            
                                             try:
                                                 node['address'][kval] = vval
                                             except:
@@ -201,7 +200,7 @@ def test():
     # call the process_map procedure with pretty=False. The pretty=True option adds 
     # additional spaces to the output, making it significantly larger.
     data = process_map('london_england.osm', False)
-    print "done"
+    print "Map processed"
     #pprint.pprint(data)
 
 if __name__ == "__main__":
