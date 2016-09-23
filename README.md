@@ -35,7 +35,6 @@ I downloaded the data in XML, processed it into JSON and imported it into a Mong
 * Set Database: **use osm**
 * col = db.ldn
 * Number of documents in db: **col.find().count()**
-* Most active user: **col.aggregate([{"$group":{ "_id":"$created.user", "count":{"$sum":1}}},{"$sort":{"count":-1}},{"$limit":10}]).pretty()**
 
 [4]: https://discussions.udacity.com/t/import-json-into-mongodb-project3/158051/4
 [5]: https://discussions.udacity.com/t/uploading-json-file-and-performing-query-in-mongodb/42777/4
