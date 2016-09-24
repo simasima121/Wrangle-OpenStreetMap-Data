@@ -17,7 +17,7 @@ import re
 import pprint
 
 
-OSMFILE = "london_sample_100.osm"
+OSMFILE = "london_england.osm"
 
 # match sequence of non-white space characters optionally 
 # followed by a period and match must occur at end of the string.

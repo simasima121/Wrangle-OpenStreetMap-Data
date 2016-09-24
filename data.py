@@ -57,6 +57,9 @@ banned = ['0','1','2','3','4','5','6','7','8','9']
 
 
 def shape_element(element):
+    """
+    Shaping elements of the data into a dictionary 
+    """
     node = {'created':{}, 'address':{}}
     
     # you should process only 2 types of top level tags: "node" and "way"
