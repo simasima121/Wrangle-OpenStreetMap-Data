@@ -113,7 +113,26 @@ def shape_element(element):
                         # Ensuring incorrect postcode in streetfield are moved to postcode
                         if child.attrib['k'][colon+1:] == 'street':
                             tested = vval.split(" ")
+
+                            count = 0
+                            for i in range(len(tested)):
+                                try:
+                                    if re.search(r'.*\d', tested[i]):
+                                        print tested[i], tested
+                                        count += 1
+
+                                    if count > 1 and i == len(tested)-1:
+                                        print count, i, len(tested)
+                                        node['address']['postcode'] = vval
+                                    elif i == len(tested)-1 and count < 2:
+                                        node['address'][kval] = vval
+                                except:
+                                    node['address'][kval] = vval
+                                    
+                            """
+                            tested = vval.split(" ")
                             if len(tested) > 1:
+
                                 try:
                                     end_val = tested[0][-1] # postcode end with number and start with number
                                     first_val = tested[1][0]
@@ -138,6 +157,7 @@ def shape_element(element):
 
                             else:
                                 node['address'][kval] = vval
+                            """
                         else:
                             try:
                                 node['address'][kval] = vval
@@ -202,7 +222,7 @@ def test():
     # NOTE: if you are running this code on your computer, with a larger dataset, 
     # call the process_map procedure with pretty=False. The pretty=True option adds 
     # additional spaces to the output, making it significantly larger.
-    data = process_map('london_england.osm', False)
+    data = process_map('london_sample_100.osm', False)
     print "Map processed"
     #pprint.pprint(data)
 

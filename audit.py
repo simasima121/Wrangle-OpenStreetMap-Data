@@ -5,7 +5,7 @@ from collections import defaultdict
 import re # regular expression
 import pprint
 
-osm_file = open("london_sample_1000.osm", "r")
+osm_file = open("london_sample_100.osm", "r")
 
 # match sequence of non-white space characters optionally 
 # followed by a period and match must occur at end of the string.
