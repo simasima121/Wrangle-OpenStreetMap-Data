@@ -114,21 +114,41 @@ def shape_element(element):
                         if child.attrib['k'][colon+1:] == 'street':
                             tested = vval.split(" ")
 
+
                             count = 0
+                            found = []
+                            not_found = []
                             for i in range(len(tested)):
                                 try:
                                     if re.search(r'.*\d', tested[i]):
-                                        print tested[i], tested
+                                        #print tested[i], tested
+                                        found.append(tested[i])
                                         count += 1
+                                    else:
+                                        not_found.append(tested[i])
 
                                     if count > 1 and i == len(tested)-1:
-                                        print count, i, len(tested)
-                                        node['address']['postcode'] = vval
+                                        #print count, i, len(tested)
+                                        #print "found: ", found
+                                        s = ' '.join(found)
+                                        #print "joined found: ", s
+                                        node['address']['postcode'] = s
+                                        if not_found:
+                                            s = ' '.join(not_found)
+                                            #print "joined not-found: ", s
+                                            node['address'][kval] = s
+                                        #print "postcode: ", node['address']['postcode']
+                                        #print "street: ", node['address'][kval]
+
                                     elif i == len(tested)-1 and count < 2:
                                         node['address'][kval] = vval
                                 except:
-                                    node['address'][kval] = vval
-                                    
+                                    try:
+                                        node['address'][kval] = vval
+                                    except:
+                                        #print "line 149"
+                                        node['address']['street'] = vval
+                                        #print child.attrib
                             """
                             tested = vval.split(" ")
                             if len(tested) > 1:
@@ -162,7 +182,7 @@ def shape_element(element):
                             try:
                                 node['address'][kval] = vval
                             except:
-                                print "line 139"
+                                print "line 184"
                                 print child.attrib
                         
 
@@ -222,7 +242,7 @@ def test():
     # NOTE: if you are running this code on your computer, with a larger dataset, 
     # call the process_map procedure with pretty=False. The pretty=True option adds 
     # additional spaces to the output, making it significantly larger.
-    data = process_map('london_sample_100.osm', False)
+    data = process_map('london_england.osm', False)
     print "Map processed"
     #pprint.pprint(data)
 
