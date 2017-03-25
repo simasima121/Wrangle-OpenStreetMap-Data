@@ -1,17 +1,17 @@
-#Project: Wrangling London OpenStreetMap Data
+# Project: Wrangling London OpenStreetMap Data
 In this project, I downloaded an XML OpenStreetMap dataset and used data wrangling techniques, such as assessing the quality of the data for validity, accuracy, completeness, consistency and uniformity to clean the OSM data.
 
 I downloaded the data in XML, processed it into JSON and imported it into a MongoDB database. Once in the database, I ran queries to explore the data and understand it. Finally, I communicated my findings with a PDF document about the data.
 
-##Required Libraries and Dependencies
+## Required Libraries and Dependencies
 ### Language
 * [Python][1] 
 
-###Installations
+### Installations
 * [MongoDB][2] 
 * [PyMongo][3]
 
-##How to Run Project
+## How to Run Project
 1. Download London dataset from OpenStreetMap website.
 2. Move dataset into project root directory
 3. Using terminal, navigate to the project root directory.
@@ -26,11 +26,11 @@ I downloaded the data in XML, processed it into JSON and imported it into a Mong
 [2]: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/
 [3]: http://api.mongodb.com/python/current/installation.html
 
-##Miscellaneous
+## Miscellaneous
 * [Importing json into MongoDB][4]
 * [Performing queries on MongoDB database][5]
 
-###Example Queries in terminal for mongodb
+### Example Queries in terminal for mongodb
 1. Enter mongo shell using **mongo** command in terminal
 * Set Database: **use osm**
 * col = db.ldn
