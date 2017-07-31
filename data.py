@@ -41,7 +41,7 @@ import pprint
 import re
 import codecs
 import json
- 
+  
 
 ## Update the street and city names using update street name proedure in mapping.py
 ## before saving them to JSON. 
